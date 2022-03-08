@@ -9,7 +9,7 @@ class DatabaseHelper {
       join(await getDatabasesPath(), 'todo.db'),
       onCreate: (db, version) async {
         await db.execute(
-            'CREATE TABLE tasks(id INTEGER PRIMARY KEY, title TEXT, description TEXT)');
+            'CREATE TABLE tasks(id INTEGER PRIMARY KEY, title TEXT, description TEXT, time TEXT)');
         await db.execute(
             'CREATE TABLE todo(id INTEGER PRIMARY KEY, taskId INTEGER,title TEXT, isDone INTEGER)');
       },
@@ -27,6 +27,7 @@ class DatabaseHelper {
               id: maps[index]['id'],
               title: maps[index]['title'],
               description: maps[index]['description'],
+              time: maps[index]['time'],
             ));
   }
 
@@ -47,7 +48,8 @@ class DatabaseHelper {
 
   Future<int> insertTask(Task task) async {
     final db = await database();
-
+    // print(task.time);
+    // print(DateTime.parse(task.time.toString()));
     return await db.insert(
       'tasks',
       task.toMap(),
@@ -68,9 +70,8 @@ class DatabaseHelper {
     final db = await database();
 
     await db.rawUpdate(
-      'UPDATE tasks SET title = "${task.title}", description = "${task.description}" WHERE id = ${task.id}',
+      'UPDATE tasks SET title = "${task.title}", description = "${task.description}",time = "${task.time}" WHERE id = ${task.id}',
     );
-    print('updated');
   }
 
   Future<void> updateTodoDone(int? id, int? isDone) async {

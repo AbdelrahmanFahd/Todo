@@ -4,6 +4,7 @@ import '../widgets.dart' as wg;
 import '../database_helper.dart';
 import '../models/task.dart';
 import '../models/todo.dart';
+import 'package:intl/intl.dart';
 
 class TaskScreen extends StatefulWidget {
   const TaskScreen({required this.task, Key? key}) : super(key: key);
@@ -19,6 +20,7 @@ class _TaskScreenState extends State<TaskScreen> {
   String? _taskTitle;
   String? _taskDescription;
   int? _taskId;
+  String? _taskTime;
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -37,14 +39,19 @@ class _TaskScreenState extends State<TaskScreen> {
       formKey.currentState!.save();
 
       if (_taskId == null) {
-        final _newTask = Task(title: _taskTitle, description: _taskDescription);
+        _taskTime = DateTime.now().toString();
+        final _newTask = Task(
+            title: _taskTitle, description: _taskDescription, time: _taskTime);
         _taskId = await dbHelper.insertTask(_newTask);
         setState(() {
           isVisible = true;
         });
       } else {
-        final _updateTask =
-            Task(id: _taskId, title: _taskTitle, description: _taskDescription);
+        final _updateTask = Task(
+            id: _taskId,
+            title: _taskTitle,
+            description: _taskDescription,
+            time: _taskTime);
         await dbHelper.updateTask(_updateTask);
         setState(() {});
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -103,6 +110,7 @@ class _TaskScreenState extends State<TaskScreen> {
       _taskTitle = widget.task!.title;
       _taskDescription = widget.task!.description;
       _taskId = widget.task!.id;
+      _taskTime = widget.task!.time;
       titleController.text = _taskTitle.toString();
       descriptionController.text = _taskDescription.toString();
       isVisible = true;
@@ -184,8 +192,27 @@ class _TaskScreenState extends State<TaskScreen> {
                 },
               ),
 
-              // ToDoo Tasks
+              //Time
+              Visibility(
+                visible: isVisible,
+                child: Container(
+                  padding: const EdgeInsets.only(left: 24, bottom: 10, top: 5),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    _taskTime == null
+                        ? ''
+                        : DateFormat.yMMMd()
+                            .format(DateTime.parse(_taskTime.toString())),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF86829D),
+                    ),
+                  ),
+                ),
+              ),
 
+              // ToDoo Tasks
               Visibility(
                 visible: isVisible,
                 child: Expanded(
@@ -252,17 +279,13 @@ class _TaskScreenState extends State<TaskScreen> {
                           focusNode: todoFocusNode,
                           controller: todoController,
                           onFieldSubmitted: (value) async {
-                            if (value != null) {
-                              if (_taskId != null) {
-                                final dbHelper = DatabaseHelper();
-                                final _newTodo = Todo(
-                                    title: value, taskId: _taskId, isDone: 0);
-                                await dbHelper.insertTodo(_newTodo);
-                                todoController.clear();
-                                setState(() {});
-                              } else {
-                                print('task does not exist');
-                              }
+                            if (_taskId != null && value.isNotEmpty) {
+                              final dbHelper = DatabaseHelper();
+                              final _newTodo = Todo(
+                                  title: value, taskId: _taskId, isDone: 0);
+                              await dbHelper.insertTodo(_newTodo);
+                              todoController.clear();
+                              setState(() {});
                             }
                           },
                           decoration: const InputDecoration(
@@ -296,7 +319,6 @@ class _TaskScreenState extends State<TaskScreen> {
           ),
 
           // Save Button
-
           Positioned(
             bottom: 24.0,
             right: 24.0,

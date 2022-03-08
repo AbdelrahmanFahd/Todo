@@ -3,6 +3,7 @@ import '../models/task.dart';
 import '../widgets.dart';
 import 'task_screen.dart';
 import '../database_helper.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -47,25 +48,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                 behavior: NoGlowBehaviour(),
                                 child: ListView.builder(
                                   itemCount: snapShot.data?.length,
-                                  itemBuilder: (context, index) =>
-                                      GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (ctx) => TaskScreen(
-                                                  task: snapShot.data![index],
-                                                )),
-                                      ).then((value) {
-                                        setState(() {});
-                                      });
-                                    },
-                                    child: TaskCard(
-                                        title: snapShot.data![index].title,
-                                        description: snapShot
-                                            .data![index].description
-                                            .toString()),
-                                  ),
+                                  itemBuilder: (context, index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (ctx) => TaskScreen(
+                                                    task: snapShot.data![index],
+                                                  )),
+                                        ).then((value) {
+                                          setState(() {});
+                                        });
+                                      },
+                                      child: TaskCard(
+                                          time: snapShot.data![index].time,
+                                          title: snapShot.data![index].title,
+                                          description: snapShot
+                                              .data![index].description
+                                              .toString()),
+                                    );
+                                  },
                                 ),
                               ),
                   )),

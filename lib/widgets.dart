@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TaskCard extends StatelessWidget {
   const TaskCard(
       {this.title = '( Unnamed Task )',
       this.description = 'No Description Added',
+      this.time,
       Key? key})
       : super(key: key);
   final String? title;
   final String description;
+  final String? time;
+
   @override
   Widget build(BuildContext context) {
+    final formatDate =
+        DateFormat.yMMMd().format(DateTime.parse(time.toString()));
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 32.0, horizontal: 24.0),
       margin: const EdgeInsets.only(bottom: 20.0),
@@ -34,6 +41,18 @@ class TaskCard extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 color: Color(0xFF86829D),
                 height: 2,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Text(
+              formatDate,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF86829D),
+                // height: 2,
               ),
             ),
           ),
