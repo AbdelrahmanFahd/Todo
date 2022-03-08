@@ -36,7 +36,7 @@ class _TaskScreenState extends State<TaskScreen> {
     if (isValid) {
       formKey.currentState!.save();
 
-      if (widget.task == null) {
+      if (_taskId == null) {
         final _newTask = Task(title: _taskTitle, description: _taskDescription);
         _taskId = await dbHelper.insertTask(_newTask);
         setState(() {
@@ -58,7 +58,7 @@ class _TaskScreenState extends State<TaskScreen> {
           ),
           backgroundColor: Colors.white,
           elevation: 0,
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           duration: const Duration(seconds: 1),
