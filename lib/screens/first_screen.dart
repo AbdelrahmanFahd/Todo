@@ -12,7 +12,8 @@ class FirstScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(children: [
           const Expanded(
-              child: Image(image: AssetImage('assets/images/23.png'))),
+              child:
+                  Image(image: AssetImage('assets/images/first_screen.png'))),
           SizedBox(
             height: deviceSize.height * 0.3,
             child: Column(
