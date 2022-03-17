@@ -50,11 +50,16 @@ class DatabaseHelper {
     final db = await database();
     // print(task.time);
     // print(DateTime.parse(task.time.toString()));
-    return await db.insert(
+    final _taskId = await db.insert(
       'tasks',
       task.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    await insertTodo(Todo(title: 'صلاة', taskId: _taskId, isDone: 0));
+    await insertTodo(Todo(title: 'قران', taskId: _taskId, isDone: 0));
+    await insertTodo(Todo(title: 'تمرين', taskId: _taskId, isDone: 0));
+    await insertTodo(Todo(title: 'مذاكرة', taskId: _taskId, isDone: 0));
+    return _taskId;
   }
 
   Future<void> insertTodo(Todo todo) async {

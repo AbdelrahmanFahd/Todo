@@ -3,7 +3,6 @@ import '../models/task.dart';
 import '../widgets.dart';
 import 'task_screen.dart';
 import '../database_helper.dart';
-import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -49,23 +48,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: ListView.builder(
                                   itemCount: snapShot.data?.length,
                                   itemBuilder: (context, index) {
+                                    final _newIndex =
+                                        snapShot.data!.length - 1 - index;
                                     return GestureDetector(
                                       onTap: () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (ctx) => TaskScreen(
-                                                    task: snapShot.data![index],
+                                                    task: snapShot
+                                                        .data![_newIndex],
                                                   )),
                                         ).then((value) {
                                           setState(() {});
                                         });
                                       },
                                       child: TaskCard(
-                                          time: snapShot.data![index].time,
-                                          title: snapShot.data![index].title,
+                                          time: snapShot.data![_newIndex].time,
+                                          title:
+                                              snapShot.data![_newIndex].title,
                                           description: snapShot
-                                              .data![index].description
+                                              .data![_newIndex].description
                                               .toString()),
                                     );
                                   },
